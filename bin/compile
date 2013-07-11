@@ -39,11 +39,23 @@ function indent() {
   esac
 }
 
-function run_npm() {
+function run_npm_client() {
   command="$1"
 
-  cd $BUILD_DIR
-  HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js $command 2>&1 | indent
+  cd $BUILD_DIR/client
+  HOME="$BUILD_DIR/client" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js $command 2>&1 | indent
+
+  if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+    echo " !     Failed to $command dependencies with npm"
+    exit 1
+  fi
+}
+
+function run_npm_server() {
+  command="$1"
+
+  cd $BUILD_DIR/server
+  HOME="$BUILD_DIR/server" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js $command 2>&1 | indent
 
   if [ "${PIPESTATUS[*]}" != "0 0" ]; then
     echo " !     Failed to $command dependencies with npm"
@@ -175,10 +187,15 @@ export CPATH="$INCLUDE_PATH:$CPATH"
 export CPPPATH="$INCLUDE_PATH:$CPPPATH"
 
 # install dependencies with npm
-echo "-----> Installing dependencies with npm"
-run_npm "install --production"
-run_npm "rebuild"
-echo "Dependencies installed" | indent
+echo "-----> Installing Server dependencies with npm"
+run_npm_server "install --production"
+run_npm_server "rebuild"
+echo "Server dependencies installed" | indent
+
+echo "-----> Installing Client dependencies with npm"
+run_npm_client "install --production"
+run_npm_client "rebuild"
+echo "Client dependencies installed" | indent
 
 echo "-----> Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
