@@ -208,9 +208,7 @@ echo "Client dependencies installed" | indent
 
 
 echo "-----> Packaging Client with grunt"
-
-run_npm_client "install --production"
-run_npm_client "rebuild"
+run_grunt_client "build"
 echo "Client dependencies installed" | indent
 
 echo "-----> Building runtime environment"
