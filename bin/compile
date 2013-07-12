@@ -63,6 +63,15 @@ function run_npm_server() {
   fi
 }
 
+function run_grunt_client() {
+  command="$1"
+
+  cd $BUILD_DIR/client
+  HOME="$BUILD_DIR/client" 
+
+  ./node_modules/grunt/bin/grunt $command 2>$1 | indent
+}
+
 function manifest_versions() {
   curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | tr -s '\n' ' '
 }
@@ -193,6 +202,13 @@ run_npm_server "rebuild"
 echo "Server dependencies installed" | indent
 
 echo "-----> Installing Client dependencies with npm"
+run_npm_client "install --production"
+run_npm_client "rebuild"
+echo "Client dependencies installed" | indent
+
+
+echo "-----> Packaging Client with grunt"
+
 run_npm_client "install --production"
 run_npm_client "rebuild"
 echo "Client dependencies installed" | indent
