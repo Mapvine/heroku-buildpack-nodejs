@@ -203,7 +203,7 @@ if [ -f $BUILD_DIR/client/Gruntfile.js ]; then
   run_npm_client "install grunt"
   echo "-----> Found Gruntfile, running grunt heroku task"
   cd $BUILD_DIR/client
-  HOME="$BUILD_DIR/client" $BUILD_DIR/client/node_modules/.bin/grunt heroku
+  HOME="$BUILD_DIR/client" $BUILD_DIR/client/node_modules/.bin/grunt heroku --force
 else
   echo "-----> No Gruntfile found"
 fi
