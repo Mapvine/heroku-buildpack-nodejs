@@ -197,6 +197,16 @@ run_npm_client "install --production"
 run_npm_client "rebuild"
 echo "Client dependencies installed" | indent
 
+if [ -f $BUILD_DIR/client/Gruntfile.js ]; then
+  # make sure that grunt and grunt-cli are installed locally
+  run_npm_client "install grunt-cli"
+  run_npm_client "install grunt"
+  echo "-----> Found Gruntfile, running grunt heroku:$NODE_ENV task"
+  $BUILD_DIR/client/node_modules/.bin/grunt heroku:$NODE_ENV
+else
+  echo "-----> No Gruntfile found"
+fi
+
 echo "-----> Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
 echo "export PATH=\"\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\"" > $BUILD_DIR/.profile.d/nodejs.sh
