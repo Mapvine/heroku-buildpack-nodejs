@@ -199,6 +199,7 @@ echo "Client dependencies installed" | indent
 
 if [ -f $BUILD_DIR/client/Gruntfile.js ]; then
   # make sure that grunt and grunt-cli are installed locally
+  run_npm_client "install yo"
   run_npm_client "install grunt-cli"
   run_npm_client "install grunt"
   echo "-----> Found Gruntfile, running grunt heroku task"
