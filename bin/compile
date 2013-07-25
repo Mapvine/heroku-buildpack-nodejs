@@ -186,6 +186,12 @@ INCLUDE_PATH="$VENDORED_NODE/include"
 export CPATH="$INCLUDE_PATH:$CPATH"
 export CPPPATH="$INCLUDE_PATH:$CPPPATH"
 
+# install compass
+echo "-----> Installing Compass"
+export GEM_HOME=$BUILD_DIR/.gem/ruby/1.9.1
+PATH="$GEM_HOME/bin:$PATH"
+HOME=$BUILD_DIR gem install compass --user-install --no-rdoc --no-ri
+
 # install dependencies with npm
 echo "-----> Installing Server dependencies with npm"
 run_npm_server "install --production"
@@ -212,3 +218,4 @@ fi
 echo "-----> Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
 echo "export PATH=\"\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\"" > $BUILD_DIR/.profile.d/nodejs.sh
+echo "export PATH=\"\$HOME/.gem/ruby/1.9.1/bin:\$PATH\"" > $BUILD_DIR/.profile.d/ruby.sh
